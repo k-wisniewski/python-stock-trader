@@ -4,7 +4,7 @@ from pathlib import Path
 
 from stock_trader.acquisition.data_sources.data_source_factory import Source, data_source_factory
 from stock_trader.acquisition.data_loaders.data_loader_factory import data_loader_factory
-from stock_trader.reporting.visualizer_factory import visualizer_factory
+from stock_trader.reporting.visualizer import Visualizer
 from stock_trader.utils.date_range import DateRange
 from stock_trader.workflows.backtesting import BacktestingWorkflow
 from stock_trader.trading_algorithms.factory import indicator_factory, signal_factory
@@ -52,7 +52,7 @@ def plot(ctx: click.Context, indicator_name: str) -> None:
     workflow = PlottingWorkflow(
         ctx.obj["tickers"],
         ctx.obj["data_loader"],
-        visualizer_factory(),
+        Visualizer(), # TODO: change me
         indicator_factory,
     )
     workflow.plot(indicator_name, ctx.obj["date_range"])
