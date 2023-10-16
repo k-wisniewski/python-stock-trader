@@ -37,6 +37,7 @@ def test_rsi_visualizer_outputs_png_image_in_the_report_output_path(
 ) -> None:
     visualizer = visualizer_factory()
     monkeypatch.setattr("stock_trader.reporting.visualizer.APP_SETTINGS.report_output_path", tmp_path)
+
     data = fake_data_source.load_to_dataframe("AAPL")
     data["RSI_14"] = pd.Series([47.0, 31.0, 28.0, 37.0, 52.0], index=data.index, name="RSI_14")
     visualizer.plot(data, "AAPL", ["RSI_14"])
