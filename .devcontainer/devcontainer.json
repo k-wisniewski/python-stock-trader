@@ -13,7 +13,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "python -m pip install --user -r requirements.txt && mkdir reports",
+	"postCreateCommand": "python -m pip install --user -r requirements.txt && mkdir -p reports",
 	"customizations": {
 		"vscode": {
 			"extensions": [
@@ -21,7 +21,9 @@
 				"ms-toolsai.jupyter",
 				"ms-python.vscode-pylance",
 				"GitHub.copilot",
-				"GitHub.copilot-chat"				
+				"GitHub.copilot-chat",
+				"ms-python.black-formatter",
+				"tamasfe.even-better-toml"
 			]
 		}
 	}
