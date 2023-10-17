@@ -1,9 +1,29 @@
+from datetime import date
 from typing import Any, Self, cast
+
+from pydantic import BaseModel, Field, ValidationError
 
 from stock_trader.acquisition.data_sources.data_source import DataSource, TickerNotFoundError
 import requests
 import pandas as pd
 
+class MetaData(BaseModel):
+    information: str = Field(alias="1. Information")
+    symbol: str = Field(alias="2. Symbol")
+    last_refreshed: str = Field(alias="3. Last Refreshed")
+    output_size: str = Field(alias="4. Output Size")
+    time_zone: str = Field(alias="5. Time Zone")
+
+class OHLCV(BaseModel):
+    open: float = Field(alias="1. open")
+    high: float = Field(alias="2. high")
+    low: float = Field(alias="3. low")
+    close: float = Field(alias="4. close")
+    volume: int = Field(alias="5. volume")
+
+class AlphaVantageResponse(BaseModel):
+    meta_data: MetaData = Field(alias="Meta Data")
+    time_series: dict[date, OHLCV] = Field(alias="Time Series (Daily)")
 
 class AlphaVantageDataSource(DataSource):
     def __init__(self: Self, api_key: str) -> None:
@@ -22,13 +42,17 @@ class AlphaVantageDataSource(DataSource):
         return df
 
     def _make_dataframe_from_raw_data(self: Self, raw_data: dict[str, Any]) -> pd.DataFrame:
-        return pd.DataFrame.from_dict(raw_data["Time Series (Daily)"], orient="index")
+        return pd.DataFrame.from_dict(raw_data["time_series"], orient="index")
 
     def _fetch_raw_data(self: Self, ticker: str) -> dict[str, Any]:
         r = requests.get(
             f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={ticker}&apikey={self.__API_KEY}"
         )
-        raw_data = r.json()
+
+        try:
+            raw_data = AlphaVantageResponse(**r.json()).model_dump()
+        except ValidationError as e:
+            raise TickerNotFoundError() from e
         # TODO: Handle throttling
         if "Error Message" in raw_data:
             raise TickerNotFoundError()
@@ -42,7 +66,7 @@ class AlphaVantageDataSource(DataSource):
         return pd.to_datetime(df.index)
 
     def _rename_columns(self: Self, df: pd.DataFrame) -> pd.Index:  # type: ignore
-        return pd.Index([col.split(". ")[1].capitalize() for col in df.columns])
+        return pd.Index([col.capitalize() for col in df.columns])
 
     def __str__(self: Self) -> str:
         return "AlphaVantage"
