@@ -2,15 +2,12 @@ yfinance
 pandas
 numpy
 matplotlib
-matplotlib-stubs
 mplfinance
 pip-tools
 pydantic
 pydantic-settings
 pytest
 click
-types-requests
-pandas-stubs
 freezegun
 jupyter
 scalene

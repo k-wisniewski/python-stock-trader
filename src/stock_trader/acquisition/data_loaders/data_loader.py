@@ -41,7 +41,7 @@ class ParallelDataLoader(DataLoader):
     def load_for_tickers(self: Self, tickers: list[str], date_range: DateRange) -> dict[str, pd.DataFrame]:
         result = {}
         # both ThreadPoolExecutor and ProcessPoolExecutor have max_workers
-        with self._executor_cls(max_workers=self._num_workers) as executor:  # type: ignore
+        with self._executor_cls(max_workers=self._num_workers) as executor:
             futures = {executor.submit(self._data_source.fetch, ticker, date_range): ticker for ticker in tickers}
             for future in as_completed(futures):
                 try:

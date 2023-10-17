@@ -14,10 +14,10 @@ class DataSourceMeta(ABCMeta):
     def __init__(cls, name: str, bases: tuple[type, ...], attrs: dict[str, Any]):
         super().__init__(name, bases, attrs)
         if "fetch" in attrs and name != "DataSource":
-            original_fetch = cls.fetch  # type: ignore
+            original_fetch = cls.fetch
 
             @functools.wraps(original_fetch)
-            def fetch_wrapper(*args, **kwargs) -> pd.DataFrame:  # type: ignore
+            def fetch_wrapper(*args, **kwargs) -> pd.DataFrame:
                 result = original_fetch(*args, **kwargs)
 
                 if not isinstance(result, pd.DataFrame):
