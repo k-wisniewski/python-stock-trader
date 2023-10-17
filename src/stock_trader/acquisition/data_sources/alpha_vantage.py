@@ -41,7 +41,7 @@ class AlphaVantageDataSource(DataSource):
     def _convert_index(self: Self, df: pd.DataFrame) -> pd.DatetimeIndex:
         return pd.to_datetime(df.index)
 
-    def _rename_columns(self: Self, df: pd.DataFrame) -> pd.Index:  # type: ignore
+    def _rename_columns(self: Self, df: pd.DataFrame) -> pd.Index:
         return pd.Index([col.split(". ")[1].capitalize() for col in df.columns])
 
     def __str__(self: Self) -> str:

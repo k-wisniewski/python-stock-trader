@@ -24,7 +24,7 @@ class PlottingWorkflow:
     def plot(self: Self, indicator: str, date_range: DateRange) -> None:
         data = self._data_loader.load_for_tickers(self._tickers, date_range)
         for ticker in self._tickers:
-            self._plot_for_ticket(data[ticker], ticker, indicator)
+            self._plot_for_ticket(data[ticker], indicator, ticker)
 
     def _plot_for_ticket(self: Self, ticker_ohlc: pd.DataFrame, ticker: str, indicator_name: str) -> None:
         indicator_columns = []

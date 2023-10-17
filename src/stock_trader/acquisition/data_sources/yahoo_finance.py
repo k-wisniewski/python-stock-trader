@@ -19,7 +19,7 @@ class YFinanceDataSource(DataSource):
     def _convert_index(self: Self, df: pd.DataFrame) -> pd.DatetimeIndex:
         # tz_convert(None) removes the timezone information from the index
         # df has DatetimeIndex so we can use tz_convert method
-        return df.index.tz_convert(None)  # type: ignore
+        return df.index.tz_convert(None)
 
     def __str__(self: Self) -> str:
         return "YFinance"
