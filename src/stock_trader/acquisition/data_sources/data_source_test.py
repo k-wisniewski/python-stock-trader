@@ -42,4 +42,10 @@ def test_returns_maximum_available_range_of_data_when_date_range_larger(
 @pytest.mark.parametrize("data_source", DATA_SOURCES, ids=data_source_ids)
 def test_raises_TickerNotFound_when_ticker_not_found(data_source: DataSource) -> None:
     with pytest.raises(TickerNotFoundError):
-        data_source.fetch("nvgasdasda", DateRange.years_back(10))
+        data_source.fetch(
+            "nvgasdasda",
+            DateRange(
+                start=datetime(year=2013, month=10, day=1),
+                end=datetime(year=2023, month=10, day=1)
+            )
+        )
