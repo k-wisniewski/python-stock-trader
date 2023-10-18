@@ -32,7 +32,7 @@ def backtest(ctx: click.Context, signal_name: str, initial_lump_sum: float) -> N
 
 @click.command()
 @click.pass_context
-def demo_backtest(ctx: click.Context):
+def demo_backtest(ctx: click.Context) -> None:
     signal = signal_factory("RSI")
     workflow = BacktestingWorkflow(ctx.obj["tickers"], ctx.obj["data_loader"], signal)
     workflow.backtest(ctx.obj["date_range"], 1000000)
@@ -59,7 +59,7 @@ def plot(ctx: click.Context, indicator_name: str) -> None:
 
 @click.command()
 @click.pass_context
-def demo_plot(ctx: click.Context):
+def demo_plot(ctx: click.Context) -> None:
     workflow = PlottingWorkflow(
         ctx.obj["tickers"],
         ctx.obj["data_loader"],

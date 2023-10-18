@@ -34,12 +34,13 @@ class Visualizer(ABC):
         return subplots
 
     def _plot_stock_price(self: Self, data: pd.DataFrame, ticker: str) -> None:
+        filename = self._get_file_name(ticker, [])
         mpf.plot(
             data[["Open", "High", "Low", "Close", "Volume"]],
-            type=type,
+            type="candle",
             style="yahoo",
             volume=True,
-            savefig=self._get_file_name(ticker, [])
+            savefig=filename
         )
         plt.close()
 
