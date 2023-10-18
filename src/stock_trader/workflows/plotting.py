@@ -3,7 +3,7 @@ from typing import Self
 import pandas as pd
 
 from stock_trader.acquisition.data_loaders.data_loader import DataLoader
-from stock_trader.reporting.visualizer import Visualizer
+from stock_trader.reporting.visualizer_runner import VisualizerRunner
 from stock_trader.utils.date_range import DateRange
 from stock_trader.trading_algorithms.factory import IndicatorFactory
 
@@ -13,25 +13,22 @@ class PlottingWorkflow:
         self: Self,
         tickers: list[str],
         data_loader: DataLoader,
-        visualizer: Visualizer,
+        visualizer_runner: VisualizerRunner,
         indicator_factory: IndicatorFactory,
     ) -> None:
         self._tickers = tickers
         self._data_loader = data_loader
-        self._visualizer = visualizer
+        self._visualizer_runner = visualizer_runner
         self._indicator_factory = indicator_factory
 
-    def plot(self: Self, indicator: str, date_range: DateRange) -> None:
+    def plot(self: Self, indicator_name: str, date_range: DateRange) -> None:
         data = self._data_loader.load_for_tickers(self._tickers, date_range)
-        for ticker in self._tickers:
-            if ticker in data and len(data[ticker]) > 0:
-                self._plot_for_ticket(data[ticker], ticker, indicator)
-                print(ticker)
-
-    def _plot_for_ticket(self: Self, ticker_ohlc: pd.DataFrame, ticker: str, indicator_name: str) -> None:
+        tickers_with_data = [ticker for ticker in data.keys() if len(data[ticker]) > 0]
         indicator_columns = []
-        if indicator_name.upper() != "RAW":
-            indicator = self._indicator_factory(indicator_name)
-            indicator.compute(ticker_ohlc)
-            indicator_columns = indicator.columns_for_plot
-        self._visualizer.plot(ticker_ohlc, ticker, indicator_columns)
+        for ticker in tickers_with_data:
+            if indicator_name.upper() != "RAW":
+                indicator = self._indicator_factory(indicator_name)
+                indicator.compute(data[ticker])
+                indicator_columns = indicator.columns_for_plot
+        self._visualizer_runner.plot(data, tickers_with_data, indicator_columns)
+

@@ -5,7 +5,7 @@ import pytest
 from stock_trader.acquisition.data_loaders.data_loader_factory import data_loader_factory
 from stock_trader.acquisition.data_sources.data_source_factory import Source, data_source_factory
 
-from stock_trader.reporting.visualizer_factory import visualizer_factory
+from stock_trader.reporting.visualizer_factory import visualizer_runner_factory
 from stock_trader.settings import Concurrency
 from stock_trader.trading_algorithms.factory import indicator_factory
 from stock_trader.utils.date_range import DateRange
@@ -21,8 +21,8 @@ def test_plotting_workflow(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> N
     )
     tickers = ["AAPL"]
     data_loader = data_loader_factory(data_source_factory(Source.LOCAL))
-    visualizer = visualizer_factory()
-    workflow = PlottingWorkflow(tickers, data_loader, visualizer, indicator_factory)
+    visualizer_runner = visualizer_runner_factory()
+    workflow = PlottingWorkflow(tickers, data_loader, visualizer_runner, indicator_factory)
     date_range = DateRange(
         start=datetime(year=2010, month=1, day=1),
         end=datetime(year=2010, month=5, day=5),
