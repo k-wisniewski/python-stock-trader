@@ -4,7 +4,6 @@ from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 import sys
 
-
 class Concurrency(Enum):
     THREADS = auto()
     PROCESSESS = auto()
@@ -20,5 +19,7 @@ class Settings(BaseSettings):
     source_data_folder: DirectoryPath
     alpha_vantage_api_key: str
     concurrency: Concurrency = Concurrency.SINGLE_THREADED
+    num_workers: int = 6
+    visualizer_runner_concurrency: Concurrency = Concurrency.PROCESSESS
 
 APP_SETTINGS = Settings()
